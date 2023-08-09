@@ -22,6 +22,15 @@ void oops(){
     std::thread my_thread(my_func);
     my_thread.detach(); // 分离父线程运行：父线程不等待此线程结束就结束了。
 }
+
+class background_task{
+    public:
+        void operator()() const{
+            std::cout << "function operator do task" << std::endl;
+        }
+};
+
+
 int main(){
     std::cout << "start oops" << std::endl;
     // oops();
@@ -37,5 +46,11 @@ int main(){
     param_thread.join();
     
     std::cout << "end oops" << std::endl;
+
+    background_task task;
+    std::thread task_thread(task);
+    task_thread.join();
+
+    std::cout << "main func end" << std::endl;
     return 1;
 }

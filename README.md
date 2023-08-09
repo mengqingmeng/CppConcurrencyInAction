@@ -24,3 +24,14 @@
 #### std::lock_guard<std::mutex>
 - 构造时上锁，析构时释放锁。
 - c++17中可不提供模板类型: `std::lock_guard guard(some_mutex);`
+## 第四章
+### 条件变量
+
+- std::condition_variable
+  - 需要和互斥量一起工作
+  - 仅能和std::mutex一起使用
+  - 一般使用这个
+- std::condition_variable_any
+  - 需要和互斥量一起工作
+  - 可以和合适的互斥量一起工作
+  - 灵活，但有更多的性能开销
