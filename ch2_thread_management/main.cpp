@@ -25,7 +25,7 @@ void oops(){
 
 class background_task{
     public:
-        void operator()() const{
+        void operator()() const{ // 函数操作符：可以像使用函数一样，使用对象。
             std::cout << "function operator do task" << std::endl;
         }
 };
@@ -38,7 +38,7 @@ int main(){
         std::cout << "my thread" << std::endl;
     });
 
-    // my_thread.join(); // join: 主线程等待线程执行完后，继续执行。
+    // my_thread.join(); // join: 主线程等待子线程执行完后，继续执行。
     my_thread.detach();
 
     // 线程传递参数
