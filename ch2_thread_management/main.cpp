@@ -3,9 +3,12 @@
 
 struct func{
     int& i;
-    func(int& _i):i(_i){}
+    func(int& _i):i(_i){
+        std::cout << "construct of func" << std::endl;
+    }
 
     void operator()(){
+        std::cout << "start of func()" << std::endl;
         for(unsigned j=0;j<1000000;++j){
             std::cout << "j:" << j << std::endl;
         }
@@ -21,6 +24,8 @@ void oops(){
     func my_func(some_local_state);
     std::thread my_thread(my_func);
     my_thread.detach(); // 分离父线程运行：父线程不等待此线程结束就结束了。
+
+    std::cout << "joinable:" << my_thread.joinable() << std::endl;
 }
 
 class background_task{
@@ -32,8 +37,11 @@ class background_task{
 
 
 int main(){
-    std::cout << "start oops" << std::endl;
-    // oops();
+    // 测试：分离与等待
+    oops();
+
+    return 1;
+    /*
     std::thread my_thread([](){
         std::cout << "my thread" << std::endl;
     });
@@ -52,5 +60,5 @@ int main(){
     task_thread.join();
 
     std::cout << "main func end" << std::endl;
-    return 1;
+    return 1;*/
 }
