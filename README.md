@@ -35,3 +35,8 @@
   - 需要和互斥量一起工作
   - 可以和合适的互斥量一起工作
   - 灵活，但有更多的性能开销
+  
+# [c++并发编程](https://paul.pub/cpp-concurrency/) cpp_concurrency
+
+## navie_multithread 并发任务
+
