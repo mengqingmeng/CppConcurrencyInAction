@@ -6,6 +6,13 @@ void hello(){
     std::cout << "hello concurrency,thread id:"<< std::this_thread::get_id() << std::endl;
 }
 
+class backgroud_task{
+    public:
+        void operator()() const{
+            std::cout << "background task operator" << std::endl;
+        }
+};
+
 int main(){
     std::cout << "main begin,thread id:" << std::this_thread::get_id() << std::endl;
     
@@ -24,6 +31,11 @@ int main(){
     t2.join();
 
     std::cout << "main end,thread id:"<< std::this_thread::get_id() << std::endl;
+
+    backgroud_task bt;
+
+    std::thread task_thread{backgroud_task()};
+    task_thread.join();
     
     return 0;
 }

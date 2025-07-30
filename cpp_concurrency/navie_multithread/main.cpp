@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+#include <vector>
 
 static const int MAX = 10e8;
 static double sum = 0;
