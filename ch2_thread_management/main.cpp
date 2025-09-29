@@ -2,15 +2,15 @@
 #include <thread>
 
 struct func{
-    int& i;
-    func(int& _i):i(_i){
+    int i;
+    func(int _i):i(_i){
         std::cout << "construct of func" << std::endl;
     }
 
     void operator()(){
         std::cout << "start of func()" << std::endl;
         for(unsigned j=0;j<1000000;++j){
-            std::cout << "j:" << j << std::endl;
+            std::cout << "j:" << j << ",i:" << i << std::endl;
         }
     }
 };
@@ -30,18 +30,30 @@ void oops(){
 
 class background_task{
     public:
-        void operator()() const{ // 函数操作符：可以像使用函数一样，使用对象。
+        void operator()() const {
+            do_a();
+            // 函数操作符：可以像使用函数一样，使用对象。
             std::cout << "function operator do task" << std::endl;
+            do_b();
         }
+private:
+    static void do_a() {
+        std::cout << "do a" << std::endl;
+    }
+
+    static void do_b() {
+        std::cout << "do b" << std::endl;
+    }
 };
 
-
 int main(){
+    std::cout << "main func begin" << std::endl;
     // 测试：分离与等待
     oops();
 
-    return 1;
     /*
+     *
+     * return 1;
     std::thread my_thread([](){
         std::cout << "my thread" << std::endl;
     });
@@ -58,7 +70,8 @@ int main(){
     background_task task;
     std::thread task_thread(task);
     task_thread.join();
+    */
 
     std::cout << "main func end" << std::endl;
-    return 1;*/
+    return 1;
 }
