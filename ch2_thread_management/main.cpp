@@ -1,19 +1,42 @@
 #include <iostream>
 #include <thread>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
 
 struct func{
-    int i;
-    func(int _i):i(_i){
+    int& i;
+    func(int& _i):i(_i){
         std::cout << "construct of func" << std::endl;
     }
 
     void operator()(){
         std::cout << "start of func()" << std::endl;
         for(unsigned j=0;j<1000000;++j){
-            std::cout << "j:" << j << ",i:" << i << std::endl;
+            std::cout << "j:" << j << std::endl;
         }
     }
 };
+
+/// @brief 打印当前时分秒
+void print_time(){
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream stream;
+    stream << std::put_time(std::localtime(&in_time_t),"%Y-%m-%d %X");
+    std::cout << "now is:" << stream.str() << std::endl;
+}
+
+void sleep_thread(){
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "[thread-" << std::this_thread::get_id() << "] is waking up" << std::endl;
+}
+
+void loop_thread() {
+    for (int i = 0; i < 10; i++) {
+        std::cout << "[thread-" << std::this_thread::get_id() << "] print: " << i << std::endl;
+    }
+}
 
 void f(int i,std::string const & s){
     std::cout << "i:"<< i << " s:" << s << std::endl;
@@ -41,6 +64,13 @@ private:
         std::cout << "do a" << std::endl;
     }
 
+void init(){
+    std::cout << "[thread-" << std::this_thread::get_id() << "] is initing" << std::endl;
+}
+
+void worker(std::once_flag* flag){
+    std::call_once(*flag,init);
+}
     static void do_b() {
         std::cout << "do b" << std::endl;
     }
@@ -49,11 +79,24 @@ private:
 int main(){
     std::cout << "main func begin" << std::endl;
     // 测试：分离与等待
-    oops();
+    //oops();
+    print_time();
+    std::thread t1(sleep_thread);
+    std::thread t2(loop_thread);
+    t1.join();  // 阻塞执行
+    std::cout << "join finished" << std::endl;
+    t2.detach(); // 立马执行，线程有可能在未调用detach之前就执行了
+    print_time();
+
+    // 测试：call_once、once_flag
+    std::once_flag onceFlag;
+    std::thread call_once_t1(worker,&onceFlag);
+    std::thread call_once_t2(worker,&onceFlag);
+    call_once_t1.join();
+    call_once_t2.join();
+    return 0;
 
     /*
-     *
-     * return 1;
     std::thread my_thread([](){
         std::cout << "my thread" << std::endl;
     });
@@ -70,8 +113,7 @@ int main(){
     background_task task;
     std::thread task_thread(task);
     task_thread.join();
-    */
 
     std::cout << "main func end" << std::endl;
-    return 1;
+    return 1;*/
 }
